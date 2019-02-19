@@ -3,11 +3,15 @@
 
 ### 安全模式
 
-```safe_mode = on```
+```
+safe_mode = on
+```
 
 ### 安全模式下執行程序主目錄
 
-```safe_mode_exec_dir = /var/www/html```
+```
+afe_mode_exec_dir = /var/www/html
+```
 
 ### 魔術引號
 
@@ -76,7 +80,7 @@ date.timezone = UTC
 <p>
 PHP默認採用配置項中的時區，如果項目中涉及時區，請用date_default_timezone_get()/date_default_timezone_set(utc)來設定自己想要的時區。
 
-###禁用類／方法
+### 禁用類／方法
 ```
 disable_classes =
 disable_functions =
@@ -98,7 +102,7 @@ display_error = off
 <p>
 是否將錯誤信息作為輸出的一部分，站點發布後應該關閉這項功能，以免暴露信息。調試的時候當然是要On的，不然就什麼錯誤信息也看不到了。
 
-###定義各個級別系統日誌變量
+### 定義各個級別系統日誌變量
 ```
 define_syslog_variables = off
 ```
