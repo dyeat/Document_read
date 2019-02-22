@@ -43,16 +43,18 @@ magic_quotes_gpc = Off 是 php 中一種非常不安全的選項。新版本的 
 
 ```php
 <?
-if (isset($_POST["f_login"])) {
+if (isset($_POST["f_login"])) 
+	{
 
-  // 連接資料庫... 程式碼略...
-  // 檢查用戶是否存在
-  $t_strUname = $_POST["f_uname"];
-  $t_strPwd = $_POST["f_pwd"];
-  $t_strSQL = "SELECT * FROM tbl_users WHERE username='$t_strUname' AND password = '$t_strPwd' LIMIT 0,1";
-  if ($t_hRes = mysql_query($t_strSQL)) {
-    // 成功查詢之後的處理. 略...
-  }
+		// 連接資料庫... 程式碼略...
+		// 檢查用戶是否存在
+		$t_strUname = $_POST["f_uname"];
+		$t_strPwd = $_POST["f_pwd"];
+		$t_strSQL = "SELECT * FROM tbl_users WHERE username='$t_strUname' AND password = '$t_strPwd' LIMIT 0,1";
+		if ($t_hRes = mysql_query($t_strSQL)) 
+		{
+	    // 成功查詢之後的處理. 略...
+		}
 }
 ?>
 <form method="post" action="">
@@ -104,15 +106,17 @@ SELECT * FROM tbl_user WHERE uid=1;
 
 ```php
 <?
-if (isset($_POST["f_login"])) {
-  // 連接資料庫...程式碼略...
-  // 檢查用戶是否存在
-  $t_strUid = $_POST["f_uid"];
-  $t_strPwd = $_POST["f_pwd"];
-  $t_strSQL = "SELECT * FROM tbl_users WHERE uid=$t_strUid AND password = '$t_strPwd' LIMIT 0,1";
-  if ($t_hRes = mysql_query($t_strSQL)) {
-    // 成功查詢之後的處理. 略...
-  }
+if (isset($_POST["f_login"])) 
+{
+		// 連接資料庫...程式碼略...
+		// 檢查用戶是否存在
+		$t_strUid = $_POST["f_uid"];
+		$t_strPwd = $_POST["f_pwd"];
+		$t_strSQL = "SELECT * FROM tbl_users WHERE uid=$t_strUid AND password = '$t_strPwd' LIMIT 0,1";
+		if ($t_hRes = mysql_query($t_strSQL)) 
+		{
+	    // 成功查詢之後的處理. 略...
+		}
 }
 ?>
 <form method="post" action="">
@@ -135,7 +139,7 @@ SELECT* FROM tbl_users WHERE userid=1001 OR 1=1 # AND password= 'abc123'LIMIT 0,
 
 傳送門
 
-- ![MySQL注入總結-獨自等待](http://www.waitalone.cn/mysql-injection-summary.html)
+[MySQL注入總結-獨自等待](http://www.waitalone.cn/mysql-injection-summary.html)
 
 ## **挖掘技巧**
 - 瀏覽全文、整理網站結構
