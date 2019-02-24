@@ -1,5 +1,5 @@
 ## **PHP注入漏洞**
-PHP腳本中，我們可以對輸入進行注入攻擊。什麼是注入？注入即是通過利用無驗證變量構造特殊語句對服務器進行滲透。
+PHP腳本中，我們可以對輸入進行注入攻擊。什麼是注入？注入即是通過利用無驗證變數構造特殊語句對服務器進行滲透。
 <p>
 注入的種類有很多，而不僅僅只是SQL Injection。那麼PHP中有哪些注入呢？
 
@@ -14,7 +14,7 @@ PHP腳本中，我們可以對輸入進行注入攻擊。什麼是注入？注�
 
 ### **命令注入**
 
-PHP中可以使用下列5個函數來執行外部的應用程序或函數
+PHP中可以使用下列5個函數來執行外部的應用程式或函數
 
 - system()
 - exec()
@@ -52,7 +52,7 @@ if (isset($dir))
 提交以後，命令變成了 ```system("ls -al | cat /etc/passwd");```
 
 ### **eval 注入**
-Eval 函數將輸入的字符串參數當作 PHP 程序代碼來執行
+Eval 函數將輸入的字符串參數當作 PHP 程式代碼來執行
 
 ## **函數原型**
 
@@ -96,12 +96,12 @@ if (isset($_GET["func"]))
 }
 ?>
 ```
-程序員原意是想動態調用A和B函數， 那我們提交```http://www.xxx.com/exp3.php?func=phpinfo``` 漏洞就產生了
+程式員原意是想動態調用A和B函數， 那我們提交```http://www.xxx.com/exp3.php?func=phpinfo``` 漏洞就產生了
 
-### **序列化注入&对象注入***
+### **序列化注入&对象注入**
 **unserialize的一个小特性**
 
-unserialize() 函数相关源码
+unserialize() 函數相關原始碼
 ```
 if ((YYLIMIT - YYCURSOR) < 7) YYFILL(7);
     yych = *YYCURSOR;
@@ -136,9 +136,9 @@ if ((YYLIMIT - YYCURSOR) < 7) YYFILL(7);
 
 ### **其他序列化&對象注入相關漏洞文章**
 
-- [http://www.freebuf.com/vuls/80293.html](通過PHP反序列化進行遠程代碼執行)
+- [通過PHP反序列化進行遠程代碼執行](http://www.freebuf.com/vuls/80293.html)
 - 理解php對象注入
 - WordPress < 3.6.1 PHP 對象注入漏洞
-- [https://www.91ri.org/3960.html](PHP源碼中unserialize函數引發的漏洞分析)
+- [PHP源碼中unserialize函數引發的漏洞分析](https://www.91ri.org/3960.html)
 
 ---
