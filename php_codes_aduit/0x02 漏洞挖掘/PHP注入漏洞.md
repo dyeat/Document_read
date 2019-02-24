@@ -36,7 +36,7 @@ output 獲得執行命令輸出的每一行字符串
 ```
 
 ### **漏洞實例**
-```
+```php
 //ex1.php
 <?php
 $dir = $_GET["dir"];
@@ -62,7 +62,7 @@ mixed eval(string code_str)
 ```
 
 ### **漏洞實例**
-```
+```php
 //ex2.php
 <?php
 $var = "var";
@@ -78,7 +78,7 @@ if (isset($_GET["arg"]))
 當我們提交 ```http://www.xxx.com/ex2.php?arg=phpinfo();``` 漏洞就產生了
 
 ### **動態函數注入攻擊**
-```
+```php
 //ex3.php
 <?php
 func A()
@@ -102,7 +102,7 @@ if (isset($_GET["func"]))
 **unserialize的一个小特性**
 
 unserialize() 函數相關原始碼
-```
+```php
 if ((YYLIMIT - YYCURSOR) < 7) YYFILL(7);
     yych = *YYCURSOR;
     switch (yych) {
