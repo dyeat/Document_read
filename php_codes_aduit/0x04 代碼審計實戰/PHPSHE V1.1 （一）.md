@@ -51,13 +51,14 @@ Disallow: /common.php
 這兩個文件分別是前台和後台的入口文件,稍後仔細分析。
 
 
-** config.php
+**config.php**
 資料庫配置訊息
 <br >
-** common.php
+**common.php**
 該文件作為來源數據處理和URL路由配置以及資料庫連接。
 <br >
-**.htaccess 和 httpd.ini
+**.htaccess 和 httpd.ini**
+<br >
 WEB服務程序的地址重新配置文件
 
 ## **來源數據處理文件 common.php**
