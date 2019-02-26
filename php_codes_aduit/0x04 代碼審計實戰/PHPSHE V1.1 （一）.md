@@ -55,10 +55,12 @@ Disallow: /common.php
 <br >
 資料庫配置訊息
 <br >
+
 ### **common.php**
 <br >
 該文件作為來源數據處理和URL路由配置以及資料庫連接。
 <br >
+
 ### **.htaccess 和 httpd.ini**
 <br >
 WEB服務程序的地址重新配置文件
