@@ -91,6 +91,7 @@ $id = $_POST['id'] ? $_POST['id'] : ($_GET['id'] ? $_GET['id'] : $id);
 include("{$pe['path_root']}module/{$module}/{$mod}.php");
 ```
 `$mod`沒有經過處理就直接引入到`include()`函數中。
+<br >
 雖然限定了`.php`後綴，但是並沒有什麼用。
 PHP使用C語言開發的，%00也就是\0是結束符，可以截斷字符串。
 
@@ -115,6 +116,7 @@ PHP使用C語言開發的，%00也就是\0是結束符，可以截斷字符串�
 ### **arcticle.php**
 文件路徑 `/module/index/arcticle.php`
 模塊內容直接就是判斷`$act`選擇文章列表或者文章內容。
+<br />
 我們跟進文章列表
 ```
 //Line:7
@@ -168,6 +170,7 @@ function get_limit()
 ```
 
 這時我們可以知道，變數`$_g_page`最終被引入到了`$limit`之中帶入了sql查詢語句。
+<br />
 當然`$limit`是`$this->listnum`和`$this->page - 1`的乘積，這樣就限制了很多利用方法。
 
 ### **【Bug 0x02: 訊息洩露 爆路徑 Fatal error】**
