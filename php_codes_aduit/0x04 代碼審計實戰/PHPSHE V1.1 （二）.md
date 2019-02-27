@@ -24,7 +24,7 @@ case 'pay':
 <br >
 `DATA:info[order_payway]=../../../robots.txt%00?&pesubmit=1`
 <br >
-再看看，`訂單增加`操作無需登陸就可以對數據庫操作。
+再看看，`訂單增加`操作無需登入就可以對資料庫操作。
 
 ```php
 //Line:65
@@ -131,7 +131,7 @@ protected function _dowhere($where)
 
 來自`$_c_cart_list`的`$k`未經過濾被帶入sql語句中，導致where條件注入。
 <br >
-這時，我們可以構造一個特殊的序列化購物車訂單，利用union任意查詢數據庫內容。
+這時，我們可以構造一個特殊的序列化購物車訂單，利用union任意查詢資料庫內容。
 <br >
 PHP_生成POC
 
@@ -190,7 +190,7 @@ Array
 
 這時可以發現`user_tname`和`user_phone`和`user_tel`和`order_text`都沒有經過處理，就代入了sql查詢。
 <br >
-這裡、我們可以利用update注入了。當然，我們沒有登陸、無法查看到訂單詳情。
+這裡、我們可以利用update注入了。當然，我們沒有登入、無法查看到訂單詳情。
 <br >
 同時，我們也可以構造其他的參數例如`order_state`,直接修改訂單狀態。
 
@@ -209,7 +209,7 @@ info[order_state]=paid
 
 雖然會返回訂單號錯誤，但確實是成功了。
 <br >
-在登陸情況下，該頁面也存在不少注入漏洞。
+在登入情況下，該頁面也存在不少注入漏洞。
 
 ```php
 //Line:34
@@ -224,7 +224,7 @@ case 'cartnum':
 `$_g_product_id`和`$_g_product_num`未經顧慮就帶入了sql更新。
 <br >
 
-### **【Bug 0x08: SQL注入 Update注入 AND/OR time-based blind 登陸限制】**
+### **【Bug 0x08: SQL注入 Update注入 AND/OR time-based blind 登入限制】**
 
 URL:
 
