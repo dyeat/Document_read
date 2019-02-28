@@ -62,7 +62,7 @@ function cart_info($_c_cart_list=array()) {
 <p>
 這是通過空購物車的時候，進行**購物車商品更改數量**操作自動生成的一個錯誤的商品訊息。
 <p>
-`/index.php?mod=order&act=cartnum`
+<pre>/index.php?mod=order&act=cartnum</pre>
 <p>
 然後再次進行任意一個調用到`cart_info()`函數的操作就會發生錯誤並返回錯誤訊息。
 
@@ -76,7 +76,7 @@ URL:
 ```
 **Cookie**:`cart_list=a:1:{s:0:"";a:1:{s:11:"product_num";N;}}`
 
-```Warning: array_merge(): Argument #2 is not an array in E:\SourceCodes\phpshe1.1\module\index\order.php on line 148```
+<pre>Warning: array_merge(): Argument #2 is not an array in E:\SourceCodes\phpshe1.1\module\index\order.php on line 148</pre>
 
 現在我們繼續審計是否存在注入。
 
