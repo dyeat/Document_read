@@ -68,14 +68,14 @@ WEB服務程序的地址重新配置文件
 ---
 
 ## **來源資料處理文件 common.php**
-```
+```php
 //Line:6
 
 error_reporting(E_ALL ^ E_NOTICE);
 ```
 
 開啟了日誌報告、很多錯誤訊息都會顯示、也就可能有不少訊息洩漏的漏洞
-```
+```php
 //Line:15-19
 
 //url路由配置
@@ -94,7 +94,7 @@ $id = $_POST['id'] ? $_POST['id'] : ($_GET['id'] ? $_GET['id'] : $id);
 通過cache::get()獲取一些緩存訊息。
 <br >
 根據$module和$mod加載不同的模塊。
-```
+```php
 //Line:15
 
 include("{$pe['path_root']}module/{$module}/{$mod}.php");
@@ -127,7 +127,7 @@ PHP使用C語言開發的，%00也就是\0是結束符，可以截斷字符串�
 模塊內容直接就是判斷`$act`選擇文章列表或者文章內容。
 <br />
 我們跟進文章列表
-```
+```php
 //Line:7
 
 $info_list = $db->pe_selectall('article', array('class_id'=>$class_id, 'order by'=>'`article_atime` desc'), '*', array(20, $_g_page));
@@ -137,16 +137,17 @@ $info_list = $db->pe_selectall('article', array('class_id'=>$class_id, 'order by
 我們跟進函數`pe_selectall()`，跳轉到`/include/class/db.class.php`文件
 
 
-```
+```php
 //Line:129
 
-public function pe_selectall($table, $where = '', $field = '*', $limit_page = array())｛
+public function pe_selectall($table, $where = '', $field = '*', $limit_page = array())
+｛
     ...
     return $this->sql_selectall("select {$field} from `".dbpre."{$table}` {$sqlwhere}", $limit_page);
 ```
 
 繼續跟進sql_selectall()函數
-```
+```php
 //Line:82
 
 public function sql_selectall($sql, $limit_page = array())｛
@@ -155,10 +156,11 @@ public function sql_selectall($sql, $limit_page = array())｛
 ```
 
 繼續跟進page類
-```
+```php
 //Line:17
 
-function __construct($allnum, $page = null, $listnum = null, $pagenum = null)｛
+function __construct($allnum, $page = null, $listnum = null, $pagenum = null)
+｛
     ...
     $this->page = $page === null ? 1 : $page;
     $this->listnum = $listnum === null ? 20 : $listnum;
@@ -167,7 +169,7 @@ function __construct($allnum, $page = null, $listnum = null, $pagenum = null)｛
 ```
 
 繼續跟進get_limit()函數
-```
+```php
 //Line:30    
 
 function get_limit()
