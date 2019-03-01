@@ -5,10 +5,12 @@
 然後是定義後臺導航菜單的陣列$adminmenu,接著就是判斷管理員權限，以及包含後臺操作類模塊。
 
 ```php
-if (!pe_login('admin') && $act != 'login') {
+if (!pe_login('admin') && $act != 'login') 
+{
     pe_goto('admin.php?mod=do&act=login');
 }
-if (pe_login('admin') && ($act == 'login' or $mod == 'index')) {
+if (pe_login('admin') && ($act == 'login' or $mod == 'index')) 
+{
     pe_goto('admin.php?mod=order&act=list');
 }
 ```
@@ -54,8 +56,10 @@ include("{$pe['path_root']}module/{$module}/{$mod}.php");
 
 由於有`act=login`後臺操作我們就不能執行act等操作了。
 <p>
+
 直接看`switch ($act) {的default :`塊。
 <p>
+
 ### **admin.php**
 <p>
 直接就可以看到管理員用戶名
@@ -87,31 +91,40 @@ default :
 ### **db.php**
 大致瀏覽、發現這是一個數據庫備份導入模塊，並且與其他模塊不同，沒有用到`switch`。
 <p>
+
 只判斷了`$act == 'import'`導入功能，對於備份並沒有用act判斷。
 
 ```php
-if (isset($_p_pebackup)) {//備份資料庫
+if (isset($_p_pebackup)) 
+{//備份資料庫
     $pe_cutsql = "/*#####################@ pe_cutsql @#####################*/\n";
-    if (isset($_p_pebackup)) {//不分卷
+    if (isset($_p_pebackup)) 
+    {//不分卷
         if ($_p_backup_cut && $_p_backup_where == 'down') 
             pe_error('只有在備份在伺服器才可以使用分卷功能...');
         if ($_p_backup_cut && !$_p_backup_cutsize) 
             pe_error('使用分卷備份必須填寫分卷文件大小...');
-        if ($_p_backup_where == "server") {
+        if ($_p_backup_where == "server") 
+        {
             !is_dir($back_path) && mkdir($back_path, 0777, true);
             !is_writable($back_path) && pe_error("{$back_path} 目錄沒有寫入權限...");
         }
-        if (!$_p_backup_cut) {
+        if (!$_p_backup_cut) 
+        {
             $sql_arr = array();
-            foreach ($table_list as $v) {
+            foreach ($table_list as $v) 
+            {
                 $sql_arr = array_merge($sql_arr, dosql($v['Name']));
             }
             $sql = implode($pe_cutsql, $sql_arr);
-            if ($_p_backup_where == 'down') {
+            if ($_p_backup_where == 'down') 
+            {
                 down_file($sql, "db_all.sql");
             }
-            elseif ($_p_backup_where == 'server') {
-                if (file_put_contents("{$back_path}db_all.sql", $sql)) {
+            elseif ($_p_backup_where == 'server') 
+            {
+                if (file_put_contents("{$back_path}db_all.sql", $sql)) 
+                {
                     pe_success("資料庫備份完成！");
                 }
                 else {
@@ -119,13 +132,16 @@ if (isset($_p_pebackup)) {//備份資料庫
                 }
             }
         }
-        else {
+        else 
+        {
             $vnum = 1;
             $sql_arr = array();
-            foreach ($table_list as $v) {
+            foreach ($table_list as $v) 
+            {
                 $sql_arr = array_merge($sql_arr, dosql($v['Name']));
                 $sql = implode($pe_cutsql, $sql_arr);
-                if (strlen($sql) >= $_p_backup_cutsize * 1000) {
+                if (strlen($sql) >= $_p_backup_cutsize * 1000) 
+                {
                     file_put_contents("{$back_path}db_v{$vnum}.sql", $sql);
                     $sql_arr = array();
                     $vnum++;
@@ -158,9 +174,11 @@ DATA:
 
 ```php
 default:
-    if (isset($_p_pesubmit)) {
+    if (isset($_p_pesubmit)) 
+    {
         $_p_info['admin_pw'] = md5($_p_info['admin_pw']);
-        if ($info = $db->pe_select('admin', pe_dbhold($_p_info))) {
+        if ($info = $db->pe_select('admin', pe_dbhold($_p_info))) 
+        {
             $db->pe_update('admin', array('admin_id'=>$info['admin_id']), array('admin_ltime'=>time()));
 ```
 
@@ -189,24 +207,35 @@ info[admin_name`<>1-- -]=admin&info[admin_pw]=admin&pesubmit=+
 switch ($_g_step) {
     //#####################@ 配置信息 @#####################//
     case 'setting':
-        if (isset($_p_pesubmit)) {
+        if (isset($_p_pesubmit)) 
+        {
             $dbconn = mysql_connect("{$_p_db_host}:{$_p_db_port}", $_p_db_user, $_p_db_pw);
-            if (!$dbconn) pe_error('資料庫連接失敗...数据库ip，用户名，密码对吗？');
-            if (!mysql_select_db($_p_db_name, $dbconn)) {
+            if (!$dbconn) pe_error('資料庫連接失敗...數據庫ip，用戶名，密碼對嗎？ ');
+            if (!mysql_select_db($_p_db_name, $dbconn)) 
+            {
                 mysql_query("CREATE DATABASE `{$_p_db_name}` DEFAULT CHARACTER SET utf8", $dbconn);
-                !mysql_select_db($_p_db_name, $dbconn) && pe_error('数据库选择失败...数据库名对吗？');
+                !mysql_select_db($_p_db_name, $dbconn) && pe_error('數據庫選擇失敗...數據庫名對嗎？');
             }
             mysql_query("SET NAMES utf8", $dbconn);
             mysql_query("SET sql_mode = ''", $dbconn);
 
             $sql_arr = explode('/*#####################@ pe_cutsql @#####################*/', file_get_contents("{$pe['path_root']}install/phpshe.sql"));
-            foreach ($sql_arr as $v) {
+            foreach ($sql_arr as $v) 
+            {
                 $result = mysql_query(trim(str_ireplace('{dbpre}', $_p_dbpre, $v)));
             }
-            if ($result) {
+            if ($result) 
+            {
                 mysql_query("update `{$_p_dbpre}admin` set `admin_name` = '{$_p_admin_name}', `admin_pw` = '".md5($_p_admin_pw)."' where `admin_id`=1", $dbconn);
-                $config = "<?php\n\$pe['db_host'] = '{$_p_db_host}'; //数据库主机地址\n\$pe['db_name'] = '{$_p_db_name}'; //数据库名称\n\$pe['db_user'] = '{$_p_db_user}'; //数据库用户名\n\$pe['db_pw'] = '{$_p_db_pw}'; //数据库密码\n\$pe['db_coding'] = 'utf8';\n\$pe['url_model'] = 'pathinfo'; //url模式,可选项(pathinfo/pathinfo_safe/php)\ndefine('dbpre','{$_p_dbpre}'); //数据库表前缀\n?>";
+               	 $config = $pe['db_host'] = '{$_p_db_host}' //數據庫主機地址
+			                $pe['db_name'] = '{$_p_db_name}'; //數據庫名稱
+			                $pe['db_user'] = '{$_p_db_user}'; //數據庫用戶名
+			                $pe['db_pw'] = '{$_p_db_pw}'; //數據庫密碼
+			                $pe['db_coding'] = 'utf8';\n\
+			                $pe['url_model'] = 'pathinfo'; //url模式,可選項(pathinfo/pathinfo_safe/php)
+			                define('dbpre','{$_p_dbpre}'); //數據庫表前綴
+                
                 file_put_contents("{$pe['path_root']}config.php", $config);
                 pe_goto("{$pe['host_root']}install/index.php?step=success");
             }
-            ```
+```
