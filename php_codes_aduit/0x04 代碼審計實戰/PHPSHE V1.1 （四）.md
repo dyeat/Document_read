@@ -2,7 +2,8 @@
 ### **後臺入口 admin.php**
 和前臺一樣，該文件首先包含common.php文件。
 <p>
-然後是定義後臺導航菜單的陣列$adminmenu,接著就是判斷管理員權限，以及包含後臺操作類模塊。
+	
+然後是定義後臺導航菜單的陣列 `$adminmenu`,接著就是判斷管理員權限，以及包含後臺操作類模塊。
 
 ```php
 if (!pe_login('admin') && $act != 'login') 
@@ -156,7 +157,8 @@ if (isset($_p_pebackup))
 因此，我們可以直接備份資料庫，下載襲來。
 
 ```php
-if ($_p_backup_where == 'down') {
+if ($_p_backup_where == 'down') 
+{
     down_file($sql, "db_all.sql");
 }
 ```
@@ -256,6 +258,7 @@ pesubmit=1&dbpre=');eval($_POST[1]);//&.....
 
 最後在總結一下我們所挖掘到的漏洞。
 <p>
+
 `index.php`和`admin.php`都能夠進行包含，我們是不是可以利用index.php包含admin的模塊？
 <p>
 答案是肯定的。這樣就成功繞過了`act=login`的限制了。
