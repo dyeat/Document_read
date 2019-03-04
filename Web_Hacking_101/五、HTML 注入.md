@@ -24,7 +24,7 @@ HTML，並且沒有合理處理用戶輸入。換句話說，HTML 注入漏洞�
 ---
 
 
-### 1. Coinbase 評論
+### **1. Coinbase 評論**
 ```
 難度：低
 URL： coinbase.com/apps
@@ -71,7 +71,7 @@ This is a test
 
 ---
 
-### 2. HackerOne 無意識 HTML 包含
+### **2. HackerOne 無意識 HTML 包含**
 ```
 難度：中
 URL：hackerone.com
@@ -134,7 +134,7 @@ XSS Jigsaw 的 了解了 Meta 刷新利用。
 ---
 
 
-### 3. WithinSecurity 內容偽造
+### **3. WithinSecurity 內容偽造**
 ```
 難度：低
 
@@ -158,11 +158,14 @@ https://withinsecurity.com/wp-login.php?error=access_denied
 
 <pre>https://withinsecurity.com/wp-login.php?error=Your%20account%20has%20%hacked</pre>
 
+![5](https://raw.githubusercontent.com/dyeat/Document_read/master/Web_Hacking_101/image/5-1.jpg)
+
 WithinSecurity 內容偽造
 
 這裡的關鍵是注意到 URL 中的參數在頁面中渲染。雖然他們沒有解釋，我可以假設攻擊者註意到了`access_denied`展示在了頁面上，但是也包含在 URL 中。這裡他們也報告了，漏洞也可以由一個簡單的測試，修改`access_denied`參數來找到。
 
 >重要結論
+>
 >時刻關注傳遞並且渲染為站點內容的 URL 參數。他們可能就是攻擊者的機會，用於欺騙受害者來執行一些惡意動作。
 
 
