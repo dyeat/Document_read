@@ -129,3 +129,44 @@ veloper.com">test</a>
 題，但是我不知道如何利用它，所以我停止了。我本應該繼續的。我實際上通過閱讀
 XSS Jigsaw 的 了解了 Meta 刷新利用。
 ```
+
+
+---
+
+
+### 3. WithinSecurity 內容偽造
+```
+難度：低
+
+URL：withinsecurity.com/wp-login.php
+報告鏈接：https://hackerone.com/reports/111094
+報告日期：2015.1.16
+獎金：$250
+```
+描述：
+<p>
+雖然內容偽造實際上和 HTML 注入是不同的漏洞，我也將其包含在這裡，因為它們擁有相似的本質，攻擊者讓一個站點渲染它們選擇的內容。
+<p>
+WithinSecurity 構建在 WordPress 平台之上，它包含登錄頁面withinsecurity.com/wp-login.php（這個站點已經合併到了 HackerOne 的核心平台中）。攻擊者註意到了在登錄過程中，如果發生了錯誤，WithinSecurity 就會渲染access_denied，同時對應 URL 中的error參數：
+
+<pre>
+https://withinsecurity.com/wp-login.php?error=access_denied
+</pre>
+
+注意到了這個，攻擊者嘗試修改`error`參數，並發現無論參數傳遞了什麼值，都會被站點渲染為錯誤信息的一部分，並展示給用戶。這裡是所用的示例：
+
+
+<pre>https://withinsecurity.com/wp-login.php?error=Your%20account%20has%20%hacked</pre>
+
+WithinSecurity 內容偽造
+
+這裡的關鍵是注意到 URL 中的參數在頁面中渲染。雖然他們沒有解釋，我可以假設攻擊者註意到了`access_denied`展示在了頁面上，但是也包含在 URL 中。這裡他們也報告了，漏洞也可以由一個簡單的測試，修改`access_denied`參數來找到。
+
+>重要結論
+>時刻關注傳遞並且渲染為站點內容的 URL 參數。他們可能就是攻擊者的機會，用於欺騙受害者來執行一些惡意動作。
+
+
+## 總結
+HTML 注入向站點和開發者展示了漏洞，因為他可以用於誤導用戶，並且欺騙它們來提交一些敏感信息，或者瀏覽惡意網站。就像釣魚攻擊那樣。
+<p>
+發現這些漏洞並不是通過僅僅提交 HTML，而是弄清楚站點如何渲染你的輸入文本，像是 URI 編碼的字符。而且，雖然內容偽造並不和 HTML 注入完全一樣，它也是類似的，因為它涉及讓一些輸入在 HTML 頁面中反映給受害者。攻擊者應該仔細尋找機會，來操縱 URL 參數，並讓它們在站點上渲染。
