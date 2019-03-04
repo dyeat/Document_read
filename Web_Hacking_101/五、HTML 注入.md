@@ -116,8 +116,7 @@ DOM 指代用於有效 HTML 以及 格式良好的 XML 的應用程序接口。<
 ```
 它會變成
 ```html
-<a title="'test" ismap="alert xss" yyy="test" ' ref="http://www.toronotwebsi\ tede
-veloper.com">test</a>
+<a title="'test" ismap="alert xss" yyy="test" ' ref="http://www.toronotwebsi\ tedeveloper.com">test</a>
 ```
 你可以看到，我能夠將一堆 HTML 注入到 `<a>` 標籤中。<br />
 所以，HackerOne 回滾了該修復版本，並重新開始轉義單引號了。
