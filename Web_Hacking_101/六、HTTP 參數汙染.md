@@ -23,8 +23,9 @@ amount=1000&fromAccount=12345
 分離後端參數：`toAccount=9876&amount=1000&fromAccount=12345`
 <p>
 現在，如果在提供了重複的參數時，後端僅僅接受最後一個參數，
-<br >
+
 並且假設攻擊者修改了發往網站的 POST 請求來提交`toAccount`參數，像這樣：
+
 <pre>
 amount=1000&fromAccount=12345&toAccount=99999
 </pre>
