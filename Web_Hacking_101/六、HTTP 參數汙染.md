@@ -79,12 +79,15 @@ URL：https://hackerone.com/blog/introducing-signal-and-impact
 攻擊者可以將另一個 URL 參數追加到鏈接中，並讓其指向任何他們所選的站點。 HackerOne 將其包含在發往社交媒體站點的 POST 請求中，因而導致了非預期的行為。這就是漏洞所在。
 
 漏洞報告中所用的示例是將 URL：
-[https://hackerone.com/blog/introducing-signal](https://hackerone.com/blog/introducing-signal)
+<pre>
+https://hackerone.com/blog/introducing-signal
+</pre>
 修改為：
 <p>
 <pre>
 https://hackerone.com/blog/introducing-signal?&u=https://vk.com/durov
 </pre>
+
 要注意額外的參數`u`。如果惡意更新的鏈接有 HackerOne 訪客點擊，嘗試通過社交媒體鏈接分享內容，惡意鏈接就變為：
 <pre>
 https://www.facebook.com/sharer.php?u=https://hackerone.com/blog/introducing-signal?&u=https://vk.com/durov
