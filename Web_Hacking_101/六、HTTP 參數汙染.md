@@ -102,3 +102,36 @@ https://hackerone.com/blog/introducing-signal?&u=https://vk.com/durov&text=anoth
 >
 >當網站接受內容，並且似乎要和其他 Web 服務連接時，例如社交媒體站點，一定要尋找機會。
 >這些情況下，被提交的內容可能在沒有合理安全檢查的情況下傳遞。
+
+
+---
+
+## **2. Twitter 取消訂閱提醒**
+
+```
+難度：低
+
+URL：twitter.com
+報告鏈接：https://blog.mert.ninja/twitter-hpp-vulnerability/
+報告日期：2015.8.23
+獎金：$700
+
+```
+
+描述：
+
+2015 年 8 月，黑客 Mert Tasci 在取消接收 Twitter 的提醒時，注意到一個有趣的 URL。
+
+<pre>https://twitter.com/i/u?t=1&cn=bWV&sig=657&iid=F6542&uid=1134885524&nid=22+26</pre>
+（我在書裡面把它縮短了一些）。你注意到參數 UID 了嘛？這碰巧是你的 Twitter 賬戶 UID。現在，要注意，他做了我認為多數黑客都會做的事情，他嘗試將 UID 修改為其它用戶，沒有其它事情。 Twitter 返回了錯誤。
+考慮到其他人可能已經放棄了，Mert 添加了第二個 UID 參數，所以 URL 看起來是這樣：
+
+<pre>https://twitter.com/i/u?iid=F6542&uid=2321301342&uid=1134885524&nid=22+26</pre>
+然後就成功了。他設法取消訂閱了其它用戶的郵件提醒。這就說明，Twitter 存在 HPP 取消訂閱的漏洞。
+
+>重要結論
+>
+>通過一段簡短的描述，Mert 的努力展示了堅持和知識的重要性。如果它在測試另一個作為唯一參數的 UID 之後，遠離了這個漏洞，或者它根本不知道 
+>HPP 類型漏洞，他就不會收到 $700 的獎金。
+>同時，要保持關注參數，類似 UID，它們包含在 HTTP 請求中，因為我在研究過程中見過很多報告，它們涉及到操縱參數的值，並且 Web 
+>應用做出了非預期的行為。
