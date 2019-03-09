@@ -141,3 +141,63 @@ Twitter 返回了錯誤。
 >
 >同時，要保持關注參數，類似 UID，它們包含在 HTTP 請求中，因為我在研究過程中見過很多報告，它們涉及到操縱參數的值，並且 Web 
 >應用做出了非預期的行為。
+
+---
+
+## **3. Twitter Web Intents**
+
+```
+難度：低
+
+URL：twitter.com
+報告鏈接：https://ericrafaloff.com/parameter-tampering-attack-on-twitter-web-intents
+報告日期：2015.11
+獎金：未知
+```
+描述：
+
+根據它們的文檔，Twitter Web Intents，提供了彈出優化的數據流，用於處理 Tweets & Twitter 
+用戶：發推、回复、轉發、喜歡和關注。它使用戶能夠在你的站點上下文中，和 Twitter 的內容交互，而不需要離開頁面或者授權新的應用來交互。這裡是它的一個示例：
+
+![1](https://raw.githubusercontent.com/dyeat/Document_read/master/Web_Hacking_101/image/6-1.jpg)
+
+Twitter Intent
+充分測試之後，黑客 Eric Rafaloff 發現，全部四個 Intent 類型：關注用戶、喜歡推文、轉發和發推，都存在 HPP 漏洞。
+根據他的博文，如果 Eric 創建帶有兩個`screen_name`參數的 URL：
+<pre>https://twitter.com/intent/follow?screen_name=twitter&scnreen_name=erictest3</pre>
+Twitter 會通過讓第二個screen_name比第一個優先，來處理這個請求。根據 Eric，Web 表單類似這樣：
+
+```html
+<form class="follow " id="follow_btn_form" action="/intent/follow?screen_name=er\ icrtest3" method="post"> <input type="hidden" name="authenticity_token" value="...">
+    <input type="hidden" name="screen_name" value="twitter">
+
+    <input type="hidden" name="profile_id" value="783214">
+
+    <button class="button" type="submit">
+        <b></b><strong>Follow</strong>
+    </button>
+</form>
+```
+
+受害者會看到在一個`screen_name`中定義的用戶資料，`twitter`，但是點擊按鈕後，它們會關注`erictest3`。
+<p>
+
+與之類似，當展現 intent 用於喜歡時，Eric 發現它能夠包含`screen_name`參數，雖然它和喜歡這個推文毫無關係，例如：
+
+<pre>https://twitter.com/intent/like?tweet_id=6616252302978211845&screen_name=erictest3</pre>
+喜歡這個推文會向受害者展示正確的用戶資料，但是點擊"關注"之後，它仍然會關注`erictest3`。
+
+>重要結論
+>
+>這個類似於之前的 Twitter UID 漏洞。不出意料，當一個站點存在 HPP 漏洞時，它就可能是更廣泛的系統化問題的指標。
+>有時如果你找到了類似的漏洞，它值得花時間來整體探索該平台，來看看是否存在其它可以利用相似行為的地方。
+>這個例子中，就像上面的 UID，Twitter 接受用戶標識，`screen_name`，它基於後端邏輯易受 HPP 攻擊。
+
+
+## **總結**
+
+HTTP 參數污染的風險實際上取決於後端所執行的操作，以及被污染的參數提交到了哪裡。
+<p>
+發現這些類型的漏洞實際上取決於經驗，比其他漏洞尤甚，因為網站的後端行為可能對於黑客來說是黑盒。常常，作為一個黑客，對於後端在接收了你的輸入之後進行了什麼操作，你需要擁有非常細微的洞察力。
+<p>
+通過嘗試和錯誤，你可能能夠發現一些情況，其中站點和其它服務器通信，之後開始測試參數污染。社交媒體鏈接通常是一個不錯的第一步，但是要記住保持挖掘，並且當你測試類似 UID 的參數替換時，要想到 HPP。
