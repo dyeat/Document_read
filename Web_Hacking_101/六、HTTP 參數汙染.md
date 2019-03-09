@@ -36,15 +36,15 @@ toAccount=9876&amount=1000&fromAccount=12345&toAccount=99999
 
 這裡，由惡意用戶提交的第二個`toAccount`參數，會覆蓋後端請求，並將錢轉賬給惡意用戶調教得帳戶（`99999`）而不是由系統設置的預期帳戶（`9876`）。
 <p>
-如果攻擊者打算修改它們自己的請求，並且由漏洞系統處理，這非常實用。但是如果攻擊者可以從另一個攢點生產鏈接，並且誘使用戶無意中提交惡意請求，並帶有由攻擊者附加的額外參數，它也可以對攻擊者更加實用一些。
+如果攻擊者打算修改它們自己的請求，並且由漏洞系統處理，這非常實用。但是如果攻擊者可以從另一個攢點生產連結，並且誘使用戶無意中提交惡意請求，並帶有由攻擊者附加的額外參數，它也可以對攻擊者更加實用一些。
 <p>
-另一方面，HPP 客戶端涉及到向鏈接和其它src屬性注入額外的參數。在 OWASP 的一個例子中，假設我們擁有下列代碼：
+另一方面，HPP 客戶端涉及到向連結和其它src屬性注入額外的參數。在 OWASP 的一個例子中，假設我們擁有下列代碼：
 
 ```php
 <? $val=htmlspecialchars($_GET['par'],ENT_QUOTES); ?> <a href="/page.php?action=view&par='.<?=$val?>.'">View Me!</a>
 ```
 
-它從 URL 接受`par`的值，確保它是安全的，並從中創建鏈接。現在，如果攻擊者提交了：
+它從 URL 接受`par`的值，確保它是安全的，並從中創建連結。現在，如果攻擊者提交了：
 <pre>
 http://host/page.php?par=123%26action=edit
 </pre>
@@ -70,13 +70,13 @@ HPP 服務端和客戶端都依賴於所使用的的後端技術，以及在收�
 難度：低
 
 URL：https://hackerone.com/blog/introducing-signal-and-impact
-報告鏈接；https://hackerone.com/reports/105953
+報告連結；https://hackerone.com/reports/105953
 報告日期：2015.12.18
 獎金：$500
 ```
-描述：HackerOne 包含鏈接，用於在知名社交媒體站點上分享內容，例如 Twitter，Fackbook，以及其他。這些社交媒體的鏈接包含用於社交媒體鏈接的特定參數。
+描述：HackerOne 包含連結，用於在知名社交媒體站點上分享內容，例如 Twitter，Fackbook，以及其他。這些社交媒體的連結包含用於社交媒體連結的特定參數。
 <p>
-攻擊者可以將另一個 URL 參數追加到鏈接中，並讓其指向任何他們所選的站點。 HackerOne 將其包含在發往社交媒體站點的 POST 請求中，因而導致了非預期的行為。這就是漏洞所在。
+攻擊者可以將另一個 URL 參數追加到連結中，並讓其指向任何他們所選的站點。 HackerOne 將其包含在發往社交媒體站點的 POST 請求中，因而導致了非預期的行為。這就是漏洞所在。
 
 漏洞報告中所用的示例是將 URL：
 <pre>
@@ -88,7 +88,7 @@ https://hackerone.com/blog/introducing-signal
 https://hackerone.com/blog/introducing-signal?&u=https://vk.com/durov
 </pre>
 
-要注意額外的參數`u`。如果惡意更新的鏈接有 HackerOne 訪客點擊，嘗試通過社交媒體鏈接分享內容，惡意鏈接就變為：
+要注意額外的參數`u`。如果惡意更新的連結有 HackerOne 訪客點擊，嘗試通過社交媒體連結分享內容，惡意連結就變為：
 <pre>
 https://www.facebook.com/sharer.php?u=https://hackerone.com/blog/introducing-signal?&u=https://vk.com/durov
 </pre>
@@ -112,7 +112,7 @@ https://hackerone.com/blog/introducing-signal?&u=https://vk.com/durov&text=anoth
 難度：低
 
 URL：twitter.com
-報告鏈接：https://blog.mert.ninja/twitter-hpp-vulnerability/
+報告連結：https://blog.mert.ninja/twitter-hpp-vulnerability/
 報告日期：2015.8.23
 獎金：$700
 
@@ -150,7 +150,7 @@ Twitter 返回了錯誤。
 難度：低
 
 URL：twitter.com
-報告鏈接：https://ericrafaloff.com/parameter-tampering-attack-on-twitter-web-intents
+報告連結：https://ericrafaloff.com/parameter-tampering-attack-on-twitter-web-intents
 報告日期：2015.11
 獎金：未知
 ```
@@ -200,4 +200,4 @@ HTTP 參數污染的風險實際上取決於後端所執行的操作，以及被
 <p>
 發現這些類型的漏洞實際上取決於經驗，比其他漏洞尤甚，因為網站的後端行為可能對於黑客來說是黑盒。常常，作為一個黑客，對於後端在接收了你的輸入之後進行了什麼操作，你需要擁有非常細微的洞察力。
 <p>
-通過嘗試和錯誤，你可能能夠發現一些情況，其中站點和其它服務器通信，之後開始測試參數污染。社交媒體鏈接通常是一個不錯的第一步，但是要記住保持挖掘，並且當你測試類似 UID 的參數替換時，要想到 HPP。
+通過嘗試和錯誤，你可能能夠發現一些情況，其中站點和其它服務器通信，之後開始測試參數污染。社交媒體連結通常是一個不錯的第一步，但是要記住保持挖掘，並且當你測試類似 UID 的參數替換時，要想到 HPP。
