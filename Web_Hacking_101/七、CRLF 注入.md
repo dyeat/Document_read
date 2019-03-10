@@ -68,11 +68,11 @@ location:%E5%98%BCsvg/onload=alert%28innerHTML%28%29%E5%98%BE
 </pre>
 
 
-你可以看到，換行符允許了創建新的協議頭，並和可執行的 JavaScript 一起返回：`svg/onload=alert(innerHTML)`。使用這個代碼，惡意用戶就能夠盜取任何無防備的受害者的 Twitter 會話信息。
+你可以看到，換行符允許了創建新的協議頭，並和可執行的 JavaScript 一起返回：`svg/onload=alert(innerHTML)`。使用這個程式碼，惡意用戶就能夠盜取任何無防備的受害者的 Twitter 會話信息。
 
 >重要結論
 >
->好的攻擊是觀察與技巧的組合這裡，報告者@filedescriptor了解之前的 Firefox 編碼漏洞，它錯誤處理了編碼。對這個知識的了解就可以用於測試 
+>好的攻擊是觀察與技巧的組合這裡，報告者`@filedescriptor`了解之前的 Firefox 編碼漏洞，它錯誤處理了編碼。對這個知識的了解就可以用於測試 
 >Twitter 上相似的編碼來插入換行。
 >
 >當你尋找漏洞時，始終記住要解放思想，並提交編碼後的值來觀察站點如何處理輸入。
