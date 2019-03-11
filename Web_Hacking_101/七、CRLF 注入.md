@@ -78,3 +78,50 @@ location:%E5%98%BCsvg/onload=alert%28innerHTML%28%29%E5%98%BE
 >當你尋找漏洞時，始終記住要解放思想，並提交編碼後的值來觀察站點如何處理輸入。
 
 
+---
+
+## **2. Shopify 響應分割**
+
+```
+難度：中
+
+URL：v.shopify.com/last_shop?x.myshopify.com
+報告鏈接：https://hackerone.com/reports/106427
+報告日期：2015.12.22
+獎金：$500
+```
+描述：
+
+Shopify 包含了一些隱藏功能，會在你的瀏覽器上設置 Cookie，它指向你所登錄的最後一個商店。它通過終端`/last_shop?SITENAME.shopify.com`來實現。
+<p>
+
+在 2015 年 12 月，有人發現，Shopify 不驗證在調用中傳入的`shop`參數。所以，使用 Burp Suite，白帽子就能夠使用`%0d%0a`來修改請求，並生成協議頭返回給用戶。這裡是截圖：
+
+![1](https://raw.githubusercontent.com/dyeat/Document_read/master/Web_Hacking_101/image/7-1.jpg)
+
+這裡是惡意程式碼
+
+```
+%0d%0aContent-Length:%200%0d%0a%0d%0aHTTP/1.1%20200%20OK%0d%0aContent-Type:%20te\
+xt/html%0d%0aContent-Length:%2019%0d%0a%0d%0a<html>deface</html>
+```
+
+這裡，`%20`表示空格，`%0d%0a`是 CRLF。所以瀏覽器收到了兩個協議頭，並渲染了第二個，它能夠導致很多漏洞，包括 XSS
+
+>重要結論
+>
+>一定要尋找這樣的機會，其中站點接受你的輸入，並且將其用於返回協議頭的一部分。
+>這裡，Shopify 使用last_shop值創建了 Cookie，它實際上可悲用戶克隆的 URL 參數污染。
+>這是一個不錯的信號，它可能存在 CRLF 注入漏洞。
+
+
+## **總結**
+<p>
+
+良好的攻擊是觀察和技巧的結合。了解如何使用編碼字符串來發現漏洞是一個不錯的技巧。 `%0D%0A`可以用於測試服務器，以及判斷他們是否存在 CRLF 漏洞。如果存在，進一步嘗試使用 XSS 注入來組合蓋漏洞（請見第七節）。
+<p>
+
+另一方面，如果服務器不響應`%0D%0A`，要考慮如何再次編碼這些字符，並測試服務器，以便觀察它是否解碼雙重編碼的字符，就像`@filedescriptor`所做的那樣。
+<p>
+
+一定要尋找這樣的機會，其中站點使用提交的值來返回一些類型的協議頭，例如創建 Cookie。
