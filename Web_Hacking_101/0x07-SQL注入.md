@@ -67,7 +67,10 @@ db_query("SELECT * FROM {users} WHERE name IN (:name)", array(':name'=>array('us
 ```
 
 這裡，`db_query`函數接受資料庫查詢`SELECT * FROM {users} WHERE name IN (:name)`，以及值的陣列來替換查詢中的占位符。
-在 PHP 中，當你將陣列聲明為`array('value','value2',value3')`，它實際上創建了`[0 =>'value',1=>'value2',2=>'value3']`，其中每個值都可以通過數字鍵來訪問。所以這裡，`:name`變數被陣列中的值替換。你從中獲取到的東西是：
+<br>
+在 PHP 中，當你將陣列聲明為`array('value','value2',value3')`，它實際上創建了`[0 =>'value',1=>'value2',2=>'value3']`
+<br>
+，其中每個值都可以通過數字鍵來訪問。所以這裡，`:name`變數被陣列中的值替換。你從中獲取到的東西是：
 
 ```SQL
 SELECT * FROM users WHERE name IN (:name_0, :name_1)
@@ -86,8 +89,11 @@ SELECT * FROM users WHERE name IN (:name_test) -- , :name_test)
 ```
 
 看出這是為什麽可能需要一些技巧，所以讓我們過一遍它。基於上面描述的`foreach`，Drupal 會遍歷陣列中的每個元素。
+<br>
 所以，對於第一個叠代`$i = test) –`以及`$value = user1`。現在，`$key`是查詢中的`(:name)`，並且和`$i`組合之後，
+<br>
 我們得到了`name_test) –`。對於第二個叠代，`$i = test`並且`$value = user2`，所以組合`$key`和`$i`之後，
+<br>
 我們得到了`name_test`，結果是個`:name_test`的占位符，它等於`user2`。
 
 現在，知道這些之後，Drupal 包裝 PHP PDO 對象的事實就登場了，因為 PDO 允許多重查詢。所以，攻擊者能夠傳遞惡意輸入，例如實際的 SQL 查詢來為任何的陣列鍵創建管理員用戶，它作為多重查詢解釋和執行。
