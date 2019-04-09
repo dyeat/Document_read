@@ -66,7 +66,8 @@ foreach ($data as $i => $value) {
 db_query("SELECT * FROM {users} WHERE name IN (:name)", array(':name'=>array('user1','user2')));
 ```
 
-這裡，`db_query`函數接受資料庫查詢`SELECT * FROM {users} WHERE name IN (:name)`，以及值的陣列來替換查詢中的占位符。在 PHP 中，當你將陣列聲明為`array('value','value2',value3')`，它實際上創建了`[0 =>'value',1=>'value2',2=>'value3']`，其中每個值都可以通過數字鍵來訪問。所以這裡，`:name`變數被陣列中的值替換。你從中獲取到的東西是：
+這裡，`db_query`函數接受資料庫查詢`SELECT * FROM {users} WHERE name IN (:name)`，以及值的陣列來替換查詢中的占位符。
+在 PHP 中，當你將陣列聲明為`array('value','value2',value3')`，它實際上創建了`[0 =>'value',1=>'value2',2=>'value3']`，其中每個值都可以通過數字鍵來訪問。所以這裡，`:name`變數被陣列中的值替換。你從中獲取到的東西是：
 
 ```SQL
 SELECT * FROM users WHERE name IN (:name_0, :name_1)
