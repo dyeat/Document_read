@@ -1,4 +1,4 @@
-## **十一、SQL 注入**
+## **0x07-SQL注入**
 
 >作者：Peter Yaworski
 >
@@ -30,7 +30,7 @@ $query = "SELECT * FROM users WHERE (name = 'test' OR 1=1 AND password = 12345")
 
 ---
 
-## **1. Drupal SQL 注入**
+### **1. Drupal SQL 注入**
 ```
 難度：中
 

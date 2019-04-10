@@ -1,4 +1,4 @@
-## **六、HTTP 參數汙染**
+## **0x02-HTTP 參數汙染**
 
 >作者：Peter Yaworski
 >
