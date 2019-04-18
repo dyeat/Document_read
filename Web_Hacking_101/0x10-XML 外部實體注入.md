@@ -127,7 +127,7 @@ XML 實體像是一個訊息的占位符。再次使用我們之前的例子。�
 <foo>&callhome;</foo>
 ```
 
-在解釋它之前，你可能已經註意到我在`callhome` URL 中使用了`%`來代替`&`，`%xxe`。這是因為`%`用於實體在 DTD 定義內部被求值的情況，而`&`用於實體在 XML 文檔中被求值的情況。現在，當 XML 文檔被解析，`callhome !ENTITY`會讀取`/etc/passwd`的內容，並遠程調用`http://www.malicous.com`，將文件內容作為 URL 參數來發送，因為我們控制了該服務器，我們可以檢查我們的日誌，並且足夠確保擁有了/etc/passwd的內容。Web 應用的遊戲就結束了。
+在解釋它之前，你可能已經註意到我在`callhome` URL 中使用了`%`來代替`&`，`%xxe`。這是因為`%`用於實體在 DTD 定義內部被求值的情況，而`&`用於實體在 XML 文檔中被求值的情況。現在，當 XML 文檔被解析，`callhome !ENTITY`會讀取`/etc/passwd`的內容，並遠程調用`http://www.malicous.com`，將文件內容作為 URL 參數來發送，因為我們控制了該服務器，我們可以檢查我們的日誌，並且足夠確保擁有了`/etc/passwd`的內容。Web 應用的遊戲就結束了。
 
 所以，站點如何防範 XXE 漏洞？它們可以禁止解析任何外部實體。
 
@@ -136,3 +136,37 @@ XML 實體像是一個訊息的占位符。再次使用我們之前的例子。�
 >查看 [OWASP 外部實體（XXE）解析](https://www.owasp.org/index.php/XML_External_Entity_(XXE)  Processing)
 >
 >[XXE 速查表](http://www.silentrobots.com/blog/2014/09/02/xe-cheatsheet)
+
+---
+
+## **示例**
+## **1. Google 的讀取訪問**
+```
+難度：中
+
+URL：google.com/gadgets/directory?synd=toolbar
+
+報告鏈接：https://blog.detectify.com/2014/04/11/how-we-got-read-access-on-googles-production-servers
+
+報告日期：2014.4
+
+獎金：$10000
+```
+描述：
+
+了解 XML 以及外部實體之後，這個漏洞實際上就非常直接了。Google 的工具欄按鈕允許開發者定義它們自己的按鈕，通過上傳包含特定元資料的 XML 文件。
+<p>
+
+但是，根據 Detectify 小組，通過上傳帶有`!ENTITY`，指向外部文件的 XML 文件，Google 解析了該文件，並渲染了內容。因此，小組使用了 XXE 漏洞來渲染服務器的`/etc/passwd`文件。遊戲結束。
+
+![1](https://raw.githubusercontent.com/dyeat/Document_read/master/Web_Hacking_101/image/14-1.jpg)
+
+Google 內部文件的 Detectify 截圖
+
+>重要結論
+>
+>大公司甚至都存在漏洞。雖然這個報告是兩年之前了，它仍然是一個大公司如何犯錯的極好的例子。
+>所需的 XML 可以輕易上傳到站點，站點使用了 XML 解析器。但是，有時站點不會產生響應，所以你需要測試來自 OWASP 速查表的其它輸入。
+
+
+
