@@ -253,7 +253,7 @@ URL：wikiloc.com
 根據他們的站定，Wikiloc 是個用於發現和分享最佳戶外遠足、騎車以及許多其他運動記錄的地方。有趣的是，他們也讓用戶通過 XML 文件上傳他們自己的記錄，這就對例如 David Soaps 之類的騎手非常有吸引力了。
 <p>
 
-基於他們的 Write Up，David 註冊了 Wikiloc，並注意到了 XML 上傳點，決定測試它有沒有 XXE 漏洞。最開始，它從站點下載了文件來判斷 XML 結構，這裡是一個`.gpx`文件，並插入了`*<!DOCTYPE foo [<!ENTITY xxe SYSTEM “http://www.davidsopas.com/XXE” > ]>;`。
+基於他們的 Write Up，David 註冊了 Wikiloc，並注意到了 XML 上傳點，決定測試它有沒有 XXE 漏洞。最開始，它從站點下載了文件來判斷 XML 結構，這裡是一個`.gpx`文件，並插入了`*<!DOCTYPE foo [<!ENTITY xxe SYSTEM "http://www.davidsopas.com/XXE" > ]>;`。
 <p>
 
 之後它呼叫了`.gpx`文件中 13 行的記錄名稱中的實體。
