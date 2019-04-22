@@ -313,7 +313,7 @@ xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/
 3. Wikiloc 解析了收到的 DTD文件，它觸發了`%all`;的呼叫。
 4. 當`%all`;求值時，它定義了`&send;`，它包含`%file`實體的呼叫。
 5. `%file`;在 URL 值中被替換為`/etc/passwd`文件的內容。
-6. Wikiloc 解析了 XML 文件，發現了`&send`;實體，它求值為 David 服務器的遠程呼叫，帶有`/etc/passwd`的內容，作為 URL 中的參數。
+6. Wikiloc 解析了 XML 文件，發現了`&send`;實體，它求值為 David 服務器的遠端呼叫，帶有`/etc/passwd`的內容，作為 URL 中的參數。
 
 用他自己的話來說，遊戲結束了。
 
@@ -321,3 +321,10 @@ xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/
 >
 >像之前提到的那樣，這是一個不錯的例子，展示了如何使用來自站點的 XML 模板，來組裝你自己的 XML 實體，便於讓目標合理地解析文件。
 >這裡，Wikiloc期待`.gpx`文件，而 David 保留了該結構，在預期標簽中插入了他自己的 XML 實體，也就是`<name>`標簽。此外，觀察如何處理惡意 DTD 文件很有意思，並且可以用於隨後讓目標向你的 服務器發送 GET 請求，帶有文件內容作為 URL 參數
+
+##總結
+
+XXE 表示一類有巨大潛力的有趣的攻擊向量。有幾種方式來完成，就像我們之前看到的那樣，它能夠讓漏洞應用打印自己的`/etc/passwd`文件，以`/etc/passwd`文件來調用遠端服務器，以及請求遠端 DTD 文件，它讓解析器來使用`/etc/passwd`文件調用服務器。
+<p>
+
+作為一個黑客，要留意文件上傳，特別是那些接受一些 XML 類型的上傳，應該始終測試它們是否存在 XXE 漏洞。
